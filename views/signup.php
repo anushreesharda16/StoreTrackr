@@ -1,5 +1,4 @@
 <?php
-
 include '../classes/auth.php';
 include '../config/config.php';
 include '../includes/head.php';

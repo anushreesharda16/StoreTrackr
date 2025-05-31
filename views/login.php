@@ -8,10 +8,6 @@
     if(session_status() === PHP_SESSION_NONE) {
       session_start();
     }
-    // if(!isset($_SESSION['user'])) {
-    //   exit;
-    // }
-    // print_r($_SESSION['user']);
     $user = new Users();
     if(isset($_POST['submit'])) {
         $email = $_POST['email'];
@@ -46,6 +42,20 @@
     timer: 3000,
     timerProgressBar: false
   });
+</script>
+<?php endif; ?>
+
+<?php if (isset($_GET['msg'])): ?>
+<script>
+    Swal.fire({
+        toast: true,
+        position: 'top',
+        icon: 'success',
+        title: <?= json_encode($_GET['msg']) ?>,
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: false
+    });
 </script>
 <?php endif; ?>
 

@@ -11,23 +11,11 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_status'])) {
-    $userId = $_POST['user_id'];
-    $currentStatus = $_POST['current_status'];
-    $newStatus = ($currentStatus === 'active') ? 'inactive' : 'active';
-
-    $conn = (new DatabaseConnect())->connect();
-    $stmt = $conn->prepare("UPDATE users SET status = ? WHERE id = ?");
-    $stmt->bind_param('si', $newStatus, $userId);
-    $stmt->execute();
-    $stmt->close();
-}
-
 $search = $_GET['search'] ?? '';
 $sort = $_GET['sort'] ?? '';
 $page = $_GET['page'] ?? 1;
-// $perPage = ($_GET['perPage'] && $_GET['perPage'] > 0) ?? 10;
-$perPage = 10;
+$perPage = isset($_GET['perPage']) && $_GET['perPage'] > 0 ? (int)$_GET['perPage'] : 10;
+
 $obj = new Users();
 $users = $obj->listUsers($search, $sort, $perPage, $page);
 
@@ -39,27 +27,26 @@ $dir = dirname(__DIR__) . '/uploads/user-profile-img/';
 <h2 class="text-center" style="margin-top: 50px;">Users List</h2>
 
 <div class="d-flex justify-content-between mb-3" style="padding-left: 50px; padding-right: 50px;">
-    <div class="d-flex">
-        <form action="" method="get" class="d-flex mr-2">
-            <select name="perPage" id="page" class="form-control mr-2" onchange="this.form.submit()">
+    <form action="" method="get" class="d-flex w-100 justify-content-between">
+        <div class="d-flex">
+            <select name="perPage" id="page" class="form-control me-2" onchange="this.form.submit()">
                 <option value="">Products per page</option>
-                <?php foreach ([10, 20, 30, 40, 50] as $num): ?>
-                    <option value="<?= $num ?>" <?= $perPage === $num ? 'selected' : '' ?>><?= $num ?></option>
+                <?php foreach ([10, 20, 30, 40, 50] as $num):  print_r($num) ?>
+                    <option value="<?= $num ?>" <?= $perPage == $num ? 'selected' : '' ?>><?= $num ?></option>
                 <?php endforeach; ?>
             </select>
 
-            <select name="sort" class="form-control mr-2" onchange="this.form.submit()">
+            <select name="sort" class="form-control ms-2" onchange="this.form.submit()">
                 <option value="" <?= empty($sort) ? 'selected' : '' ?>>Sort by</option>
                 <option value="az" <?= strtolower($sort) === 'az' ? 'selected' : '' ?>>A-Z</option>
                 <option value="za" <?= strtolower($sort) === 'za' ? 'selected' : '' ?>>Z-A</option>
             </select>
-        </form>
-
-        <form action="listUsers.php" method="GET" class="d-flex">
+        </div>
+        <div class="d-flex">
             <input type="text" name="search" class="form-control mr-2" placeholder="Search product..." value="<?= htmlspecialchars($search) ?>">
             <button type="submit" class="btn btn-outline-info">Search</button>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 
 <div style="padding-left: 50px; padding-right: 50px; margin-top: 50px;">
@@ -96,10 +83,10 @@ $dir = dirname(__DIR__) . '/uploads/user-profile-img/';
                             <?php endif; ?>
                         </td>
                         <td>
-                            <form method="post" action="">
+                            <form method="post" action="statusUser.php">
                                 <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                                 <input type="hidden" name="current_status" value="<?= $user['status'] ?>">
-                                
+
                                 <button type="submit" name="toggle_status" class="btn btn-sm <?= $user['status'] === 'active' ? 'btn-primary' : 'btn-secondary' ?>">
                                     <?= $user['status'] ?>
                                 </button>

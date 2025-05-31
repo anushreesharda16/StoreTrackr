@@ -44,8 +44,8 @@ class Users
         }
         $sql->execute();
         $sql->close();
-        header('Location:../views/login.php');
-        return "Registration successful. Please log in.";
+        header('Location:../views/login.php?msg=' . urlencode("Registration successful. Please log in."));
+        exit;
     }
 
     public function login($email, $password)

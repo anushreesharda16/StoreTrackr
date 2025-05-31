@@ -31,26 +31,24 @@ $totalPages = ceil((int)$totalProducts / $perPage);
     <button type="button" class="btn btn-outline-info">Add new product</button>
   </a>
   <div class="d-flex">
-    <form action="listProduct.php" method="get" class="d-flex mr-2">
-      <select name="perPage" id="page" class="form-control mr-2" onchange="this.form.submit()">
+    <form action="listProduct.php" method="get" class="d-flex justify-content-between mr-2">
+      <select name="perPage" id="page" class="form-control me-2" onchange="this.form.submit()">
         <option value="">Products per page</option>
         <?php foreach ([10, 20, 30, 40, 50] as $num): ?>
           <option value="<?= $num ?>" <?= $perPage === $num ? 'selected' : '' ?>><?= $num ?></option>
         <?php endforeach; ?>
       </select>
 
-      <select name="sort" class="form-control mr-2" onchange="this.form.submit()">
+      <select name="sort" class="form-control me-2" onchange="this.form.submit()">
         <option value="" <?= empty($sort) ? 'selected' : '' ?>>Sort by</option>
         <option value="latest" <?= strtolower($sort) === 'latest' ? 'selected' : '' ?>>Latest</option>
         <option value="oldest" <?= strtolower($sort) === 'oldest' ? 'selected' : '' ?>>Oldest</option>
         <option value="az" <?= strtolower($sort) === 'az' ? 'selected' : '' ?>>A-Z</option>
         <option value="za" <?= strtolower($sort) === 'za' ? 'selected' : '' ?>>Z-A</option>
       </select>
-    </form>
 
-    <form action="listProduct.php" method="GET" class="d-flex">
-      <input type="text" name="search" class="form-control mr-2" placeholder="Search product..." value="<?= htmlspecialchars($search) ?>">
-      <button type="submit" class="btn btn-outline-info">Search</button>
+      <input type="text" name="search" class="form-control " placeholder="Search product..." value="<?= htmlspecialchars($search) ?>">
+      <button type="submit" class="btn btn-outline-info" style="margin-left: 3px;">Search</button>
     </form>
   </div>
 </div>
